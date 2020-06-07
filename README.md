@@ -15,6 +15,7 @@ flutter版本的一个文件选择器 开发中...
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
 参数
+|---|---|
 | String title  | 标题  |
 |---|---|
 | List<String> fileTypeEnd  | 展示的文件类型   默认：".pdf , .docx , .doc"  |
@@ -28,6 +29,7 @@ flutter版本的一个文件选择器 开发中...
 | bool isScreen  | 默认关闭筛选|
 
 未来须实现日志
+|---|
 | 文件类型筛选  |
 |---|
 | 自定义图标  |
