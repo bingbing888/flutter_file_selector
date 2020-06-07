@@ -29,11 +29,15 @@ class Flutterfileselector {
 
 class FlutterFileSelector extends StatefulWidget {
   String title;
+  String pdfImg;// pdf图标
+  String wordImg;// word图标
   ValueChanged<FileSystemEntity> valueChanged;
   FlutterFileSelector(
       {
         this.valueChanged,
-        this.title
+        this.title,
+        this.pdfImg,
+        this.wordImg,
     }
       );
   @override
@@ -102,7 +106,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                   },
                   child: Icon(Icons.chevron_left,color: Colors.grey[700],),
                 ),
-                Text("  文件选择器",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
+                Text("  ${widget.title ?? '文件选择器'}",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
               ],
             ),
               color: Colors.grey[100]
@@ -158,7 +162,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Image.asset("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'images/Pdf.png' : 'images/word.png'}",fit: BoxFit.fill,width: 35,height: 35,),
+                            Image.asset("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? widget.pdfImg : widget.wordImg}",fit: BoxFit.fill,width: 35,height: 35,),
 //                      Text("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'PDF' : 'Doc'}",style: TextStyle(fontSize: 12,color: files1[index].resolveSymbolicLinksSync().contains(".pdf")? Colors.pink : Colors.blue),),
                             SizedBox(width: 15,),
                             Expanded(child: Text("${files1[index].resolveSymbolicLinksSync().substring(files1[index].resolveSymbolicLinksSync().lastIndexOf("/")+1,files1[index].resolveSymbolicLinksSync().length)}",overflow: TextOverflow.ellipsis,maxLines: 2,),),
