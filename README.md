@@ -1,8 +1,9 @@
 # flutter_file_selector
 
 #### 介绍
-flutter版本的一个文件选择器
-开发中...
+flutter版本的一个文件选择器 开发中...
+
+<a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/debug/app-debug.apk'>apk体验</a>
 
 <img src='/微信图片_20200607174036.jpg' width='20%'/>
 <img src='/微信图片_20200607174043.jpg' width='20%'/>
