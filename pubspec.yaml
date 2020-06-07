@@ -1,8 +1,9 @@
 name: flutterfileselector
-description: flutter 文件选择器
-version: 0.0.1
-author: zwb
+description: Flutter plugin for getting commonly used locations on the Android &
+  iOS file systems, such as the temp and app data directories.
 homepage: https://gitee.com/jrnet/flutter_file_selector
+version: 0.0.1
+
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
