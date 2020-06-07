@@ -50,6 +50,12 @@
       "languageVersion": "2.1"
     },
     {
+      "name": "ffi",
+      "rootUri": "file:///D:/Dev/flutter/.pub-cache/hosted/pub.flutter-io.cn/ffi-0.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.6"
+    },
+    {
       "name": "file_picker",
       "rootUri": "file:///D:/Dev/flutter/.pub-cache/hosted/pub.flutter-io.cn/file_picker-1.9.0+1",
       "packageUri": "lib/",
@@ -90,6 +96,12 @@
       "rootUri": "file:///D:/Dev/flutter/.pub-cache/hosted/pub.flutter-io.cn/meta-1.1.8",
       "packageUri": "lib/",
       "languageVersion": "1.12"
+    },
+    {
+      "name": "open_file",
+      "rootUri": "file:///D:/Dev/flutter/.pub-cache/hosted/pub.flutter-io.cn/open_file-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.1"
     },
     {
       "name": "path",
@@ -206,7 +218,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2020-06-07T09:19:26.484791Z",
+  "generated": "2020-06-07T14:58:55.275306Z",
   "generator": "pub",
   "generatorVersion": "2.8.3"
 }

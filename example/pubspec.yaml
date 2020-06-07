@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  open_file: ^3.0.1
   flutterfileselector:
     # When depending on this package from a real application you should use:
     #   flutterfileselector: ^x.y.z
