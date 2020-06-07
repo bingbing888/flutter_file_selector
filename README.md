@@ -14,6 +14,8 @@ flutter版本的一个文件选择器 开发中...
 |---|---|
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
+暂未实现
+| 文件类型筛选  |
 
 
 使用：
@@ -75,6 +77,7 @@ flutter版本的一个文件选择器 开发中...
 ```java
 /// 引用选择器
 FlutterFileSelector(
+
         valueChanged: (v){
           // 返回内容 具体查看FileSystemEntity：
           // resolveSymbolicLinksSync()为文件路径 如：storage/emulated/0/tencent/MicroMsg/Download/返岗计划(姓名).docx

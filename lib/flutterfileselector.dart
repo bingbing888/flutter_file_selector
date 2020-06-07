@@ -15,22 +15,24 @@ import 'package:path_provider/path_provider.dart';
 /// @Description: 文件选择器
 ///
 class Flutterfileselector {
-  static const MethodChannel _channel =
-      const MethodChannel('flutterfileselector');
-
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
+//  static const MethodChannel _channel =
+//      const MethodChannel('flutterfileselector');
+//
+//  static Future<String> get platformVersion async {
+//    final String version = await _channel.invokeMethod('getPlatformVersion');
+//    return version;
+//  }
 }
 
 class FlutterFileSelector extends StatefulWidget {
-  String title;
-  ValueChanged<FileSystemEntity> valueChanged;
+  String title;/// 标题
+  List<String> fileTypeEnd;/// 展示的文件后缀
+  ValueChanged<FileSystemEntity> valueChanged;/// 点击文件时的回调
   FlutterFileSelector(
       {
         this.valueChanged,
-        this.title
+        this.title,
+        this.fileTypeEnd
     }
       );
   @override
@@ -40,45 +42,52 @@ class FlutterFileSelector extends StatefulWidget {
 class _FlutterFileSelectorState extends State<FlutterFileSelector> {
   List<FileSystemEntity> files = [];
   List<FileSystemEntity> files1 = [];
+  List<String> fileTypeEnd;/// 展示的文件后缀
   @override
   void initState() {
+    if(widget.fileTypeEnd==null || widget.title==0){
+      fileTypeEnd = [
+        ".pdf",
+        ".docx",
+        ".doc"
+      ];
+    }else{
+      fileTypeEnd = widget.fileTypeEnd;
+    }
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-    getDv();
-  }
-
-  /// [i]==0 微信  [i]==1 QQ
-  /// 默认展示微信目录
-  getDv({int i:0})async{
-    await getExternalStorageDirectories().then((value) {
-      Directory directory  ;
-      if(i==0){
-        directory = Directory("/storage/emulated/0/tencent/MicroMsg/Download");
-      }else if(i==1){
-        directory = Directory("/storage/emulated/0/tencent/QQfile_recv");
+    /// 先进来页面使用延迟加载
+    Timer.periodic(Duration(milliseconds: 200), (v){
+      v.cancel();
+      try {
+        filesDirs(Directory("/storage/emulated/0/"));
+      } finally {
+        /// 倒叙
+        files1.sort((a,b)=>(b.statSync().changed).compareTo(a.statSync().changed));
+        setState(() { });
+        print("加载结束了");
       }
-//      else{
-//        directory = Directory("/storage/emulated/0/tencent/weixinWork/filecache");
-//      }
-      files = directory.listSync();
-      log(files.toString());
-      files1.clear();
-      files.forEach((element) {
-        if(FileSystemEntity.isFileSync(element.path)){
-          if(element.path.contains(".pdf") || element.path.contains(".doc") || element.path.contains(".docx")){
-            files1.add(element);
-            print(element.resolveSymbolicLinksSync());
-          }
-
-        }
-      });
-      setState(() {
-
-      });
     });
-
   }
+  filesDirs(Directory directory) {
+    List<FileSystemEntity>  fs = directory.listSync();
+    for(int i =0 ; i<fs.length ;i++){
+      //若是目录，则递归目录下的文件
+      if(FileSystemEntity.isDirectorySync(fs[i].path)){
+        print("目录"+i.toString());
+        filesDirs(fs[i]);
+      }
+      //若是文件
+      if(FileSystemEntity.isFileSync(fs[i].path)){
+        print("文件"+i.toString());
+        if( fs[i].path.endsWith(".pdf") ||  fs[i].path.endsWith(".doc")   || fs[i].path.endsWith(".docx") ){
+          files1.add(fs[i]);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,22 +119,20 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
             child: Row(
               children: <Widget>[
                 OutlineButton(onPressed: (){
-                  getDv(i: 0);
                 },child: Text("全部"),),
                 SizedBox(width: 5,),
                 OutlineButton(onPressed: (){
-                  getDv(i: 0);
-                },child: Text("微信"),),
+                },child: Text("Word"),),
                 SizedBox(width: 5,),
                 OutlineButton(onPressed: (){
-                  getDv(i: 1);
-                },child: Text("QQ"),),
+                },child: Text("PDF"),),
               ],
             ),
           ),
           Divider(height: 1,color: Colors.grey[400],),
           Expanded(child: files1.length==0?Center(child: Text("当前目录为空"),):Padding(padding: EdgeInsets.only(left: 10,right: 10),child: ListView.builder(
             itemCount: files1.length,
+            padding: EdgeInsets.all(0),
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
@@ -145,7 +152,6 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 //                  }
                 },
                 child: Container(
-//              height: 40,
                     padding: EdgeInsets.all(5),
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
@@ -155,12 +161,22 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Image.asset("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'images/Pdf.png' : 'images/word.png'}",fit: BoxFit.fill,width: 35,height: 35,),
-//                      Text("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'PDF' : 'Doc'}",style: TextStyle(fontSize: 12,color: files1[index].resolveSymbolicLinksSync().contains(".pdf")? Colors.pink : Colors.blue),),
+                            ClipRRect(
+                              child: Container(
+                                color:_type(files1[index].resolveSymbolicLinksSync())["color"],
+                                width: 40,
+                                height: 40,
+                                alignment: Alignment.center,
+                                child: Text(_type(files1[index].resolveSymbolicLinksSync())["str"],style: TextStyle(color: Colors.white),),
+                              ),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+//                            Image.asset("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'images/Pdf.png' : 'images/word.png'}",fit: BoxFit.fill,width: 35,height: 35,),
                             SizedBox(width: 15,),
                             Expanded(child: Text("${files1[index].resolveSymbolicLinksSync().substring(files1[index].resolveSymbolicLinksSync().lastIndexOf("/")+1,files1[index].resolveSymbolicLinksSync().length)}",overflow: TextOverflow.ellipsis,maxLines: 2,),),
                           ],
                         ),
+                        SizedBox(height: 3,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -177,6 +193,25 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
         ],
       ),
     );
+  }
+
+  _type(String str){
+    if(str.endsWith(".pdf")){
+      Map m = Map();
+      m["str"] = "PDF";
+      m["color"] = Colors.red[400];
+      return m;
+    }
+    if(str.endsWith(".doc") || str.endsWith(".docx")){
+      Map m = Map();
+      m["str"] = "Doc";
+      m["color"] = Colors.blue[400];
+      return m;
+    }
+    Map m = Map();
+    m["str"] = "Oth";
+    m["color"] = Colors.grey[500];
+    return m;
   }
 }
 

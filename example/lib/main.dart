@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await Flutterfileselector.platformVersion;
+//      platformVersion = await Flutterfileselector.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FlutterFileSelector(
+        fileTypeEnd: [".pdf",".doc",".docx",],
         valueChanged: (v){
           // 返回内容 具体查看FileSystemEntity：
           // resolveSymbolicLinksSync()为文件路径 如：storage/emulated/0/tencent/MicroMsg/Download/返岗计划(姓名).docx
