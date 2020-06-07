@@ -28,11 +28,15 @@ class FlutterFileSelector extends StatefulWidget {
   String title;/// 标题
   List<String> fileTypeEnd;/// 展示的文件后缀
   ValueChanged<FileSystemEntity> valueChanged;/// 点击文件时的回调
+  String pdfImg;// pdf图标
+  String wordImg;// word图标
   FlutterFileSelector(
       {
         this.valueChanged,
         this.title,
-        this.fileTypeEnd
+        this.fileTypeEnd,
+        this.pdfImg,
+        this.wordImg,
     }
       );
   @override
@@ -108,7 +112,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                   },
                   child: Icon(Icons.chevron_left,color: Colors.grey[700],),
                 ),
-                Text("  文件选择器",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
+                Text("  ${widget.title ?? '文件选择器'}",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
               ],
             ),
               color: Colors.grey[100]
