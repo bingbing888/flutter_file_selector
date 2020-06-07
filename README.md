@@ -4,8 +4,10 @@
 flutter版本的一个文件选择器
 开发中...
 
-<img src='/微信图片_20200607174036.jpg' width='40%'/>
-<img src='/微信图片_20200607174043.jpg' width='40%'/>
+<img src='/微信图片_20200607174036.jpg' width='20%'/>
+<img src='/微信图片_20200607174043.jpg' width='20%'/>
+
+
 使用到的插件
 | path_provider  | <a href='https://pub.flutter-io.cn/packages/path_provider'>pub</a>  |
 |---|---|
