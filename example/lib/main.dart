@@ -45,7 +45,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FlutterFileSelector(),
+      home: FlutterFileSelector(
+        valueChanged: (v){
+          // 返回内容 具体查看FileSystemEntity：
+          // resolveSymbolicLinksSync()为文件路径 如：storage/emulated/0/tencent/MicroMsg/Download/返岗计划(姓名).docx
+          print(v.resolveSymbolicLinksSync());
+        },
+      ),
     );
   }
 }
