@@ -25,18 +25,20 @@ class Flutterfileselector {
 }
 
 class FlutterFileSelector extends StatefulWidget {
-  String title;/// 标题
-  List<String> fileTypeEnd;/// 展示的文件后缀
-  ValueChanged<FileSystemEntity> valueChanged;/// 点击文件时的回调
+  String title;// 标题
+  List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
   String pdfImg;// pdf图标
   String wordImg;// word图标
+  String directory;// 检索的目录 默认 /storage/emulated/0/ 安卓根目录
+  bool isScreen;// 默认关闭筛选
   FlutterFileSelector(
       {
-        this.valueChanged,
         this.title,
         this.fileTypeEnd,
         this.pdfImg,
         this.wordImg,
+        this.directory:"/storage/emulated/0/",
+        this.isScreen:false,
     }
       );
   @override
@@ -47,8 +49,10 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
   List<FileSystemEntity> files = [];
   List<FileSystemEntity> files1 = [];
   List<String> fileTypeEnd;/// 展示的文件后缀
+  bool _loading = false;
   @override
   void initState() {
+    _loading = true;
     if(widget.fileTypeEnd==null || widget.title==0){
       fileTypeEnd = [
         ".pdf",
@@ -62,32 +66,37 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
     // TODO: implement initState
     super.initState();
     /// 先进来页面使用延迟加载
-    Timer.periodic(Duration(milliseconds: 200), (v){
+    Timer.periodic(Duration(milliseconds: 350), (v){
       v.cancel();
       try {
-        filesDirs(Directory("/storage/emulated/0/"));
+        filesDirs(Directory(widget.directory));
       } finally {
-        /// 倒叙
+        /// 按时间倒叙
         files1.sort((a,b)=>(b.statSync().changed).compareTo(a.statSync().changed));
         setState(() { });
         print("加载结束了");
       }
     });
   }
+
   filesDirs(Directory directory) {
     List<FileSystemEntity>  fs = directory.listSync();
     for(int i =0 ; i<fs.length ;i++){
       //若是目录，则递归目录下的文件
       if(FileSystemEntity.isDirectorySync(fs[i].path)){
-        print("目录"+i.toString());
+//        print("目录"+i.toString());
         filesDirs(fs[i]);
       }
       //若是文件
       if(FileSystemEntity.isFileSync(fs[i].path)){
-        print("文件"+i.toString());
-        if( fs[i].path.endsWith(".pdf") ||  fs[i].path.endsWith(".doc")   || fs[i].path.endsWith(".docx") ){
-          files1.add(fs[i]);
-        }
+//        print("文件"+i.toString());
+        /// 后缀匹配
+        fileTypeEnd.forEach((element) {
+          if( fs[i].path.endsWith(element)){
+            files1.add(fs[i]);
+          }
+        });
+
       }
     }
   }
@@ -117,8 +126,8 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
             ),
               color: Colors.grey[100]
           ),
-          Container(padding: EdgeInsets.only(left: 10,right: 10),width: MediaQuery.of(context).size.width,height: 25,alignment: Alignment.centerLeft,color: Colors.grey[100],child: Text("(暂只支持 微信、QQ、接收的PDF、word)",style: TextStyle(color: Colors.grey[400],fontSize: 12),),),
-          Container(
+          !widget.isScreen?SizedBox():Container(padding: EdgeInsets.only(left: 10,right: 10),width: MediaQuery.of(context).size.width,height: 25,alignment: Alignment.centerLeft,color: Colors.grey[100],child: Text("(检索全部时，系统文件较多会比较慢)",style: TextStyle(color: Colors.grey[400],fontSize: 12),),),
+          !widget.isScreen?SizedBox():Container(
             padding: EdgeInsets.only(left: 10,right: 10),
             child: Row(
               children: <Widget>[
@@ -134,26 +143,14 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
             ),
           ),
           Divider(height: 1,color: Colors.grey[400],),
-          Expanded(child: files1.length==0?Center(child: Text("当前目录为空"),):Padding(padding: EdgeInsets.only(left: 10,right: 10),child: ListView.builder(
+          Expanded(child: files1.length==0?Center(child: Text(_loading ? "正在检索文件,请稍等...":"当前目录为空"),):Padding(padding: EdgeInsets.only(left: 10,right: 10),child: ListView.builder(
             itemCount: files1.length,
             padding: EdgeInsets.all(0),
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                 onTap: () async{
-//                  String filePath = files1[index].resolveSymbolicLinksSync();
-                  widget.valueChanged(files1[index]);
-//                  if(filePath.contains(".pdf") || filePath.contains(".PDF")){
-//                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PdfShowView(pdfPath: filePath,)));
-//                  }else{
-//                    Toast.center(msg: filePath);
-//                    try{
-//                      final result = await OpenFile.open(filePath);
-//                    }catch (e){
-//                      Toast.error(msg: "打开文件失败");
-//                    }
-//
-//                  }
+                  Navigator.pop(context,files1[index]);
                 },
                 child: Container(
                     padding: EdgeInsets.all(5),
@@ -213,7 +210,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
       return m;
     }
     Map m = Map();
-    m["str"] = "Oth";
+    m["str"] = str.substring(str.lastIndexOf(".")+1,str.length);
     m["color"] = Colors.grey[500];
     return m;
   }
