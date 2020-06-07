@@ -15,27 +15,23 @@ flutter版本的一个文件选择器 开发中...
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
 参数
-|---|---|
-| String title  | 标题  |
-|---|---|
-| List<String> fileTypeEnd  | 展示的文件类型   默认：".pdf , .docx , .doc"  |
-|---|---|
-| String pdfImg  | pdf图标  |
-|---|---|
-| String wordImg  | word图标  |
-|---|---|
-| String directory  | 检索的目录 默认 /storage/emulated/0/ 安卓根目录  这个几乎不用传 用默认即可|
-|---|---|
-| bool isScreen  | 默认关闭筛选|
+
+|  参数名   | 说名  |
+|  ----  | ----  |
+| String title  | 标题 |
+| List<String> fileTypeEnd  | 展示的文件类型   默认：".pdf , .docx , .doc" |
+| String pdfImg  | pdf图标 |
+| String wordImg  | word图标 |
+| bool isScreen  | 默认关闭筛选 |
+| String directory  | 检索的目录 默认 /storage/emulated/0/ 安卓根目录  这个几乎不用传 用默认即可 |
+
 
 未来须实现日志
-|---|
-| 文件类型筛选  |
-|---|
-| 自定义图标  |
-|---|
-| 本地存储上次检索的结果  |
-
+|  参数名   | 说名  |
+|  ----  | ----  |
+| 文件类型筛选  | - |
+| 自定义图标  | - |
+| 本地存储上次检索的结果  | - |
 
 使用：
 ```java
