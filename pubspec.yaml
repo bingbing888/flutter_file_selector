@@ -12,9 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  file_picker: ^1.9.0+1
-  path_provider: 1.5.0
-  open_file: ^3.0.1
+  file_picker: any
+  path_provider: any
+  open_file: any
 
 dev_dependencies:
   flutter_test:

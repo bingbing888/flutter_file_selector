@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
                       isScreen: true,
-                      fileTypeEnd: [".pdf", ".doc", ".docx"],
+                      fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
                     ), ), ).then( (value) => setState( () => v = value),
                 );
               },
