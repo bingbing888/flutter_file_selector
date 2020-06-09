@@ -43,7 +43,7 @@ flutter版本的一个文件选择器 开发中...
 ```
 
 ```java
-安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下：
+安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：
 <provider
    android:name="androidx.core.content.FileProvider"
    android:authorities="${applicationId}.fileProvider"
@@ -52,7 +52,7 @@ flutter版本的一个文件选择器 开发中...
    tools:replace="android:authorities">
    <meta-data
        android:name="android.support.FILE_PROVIDER_PATHS"
-       android:resource="@xml/filepaths"
+       android:resource="@xml/file_select_flutter"
        tools:replace="android:resource" />
 </provider>
 ```
