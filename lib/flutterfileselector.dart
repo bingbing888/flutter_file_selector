@@ -97,6 +97,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
          file:f,
        ));
      });
+     Navigator.pop(context);
      Navigator.pop(context,list);
    }catch (e){
      print("FlutterFileSelect Error:"+e.toString());
