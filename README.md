@@ -3,35 +3,33 @@
 #### 介绍
 flutter版本的一个文件选择器 开发中...
 
-<a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk体验</a>
+<a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk下载体验,ios暂无</a>
 
-<img src='/微信图片_20200607174036.jpg' width='20%'/>
-<img src='/微信图片_20200607174043.jpg' width='20%'/>
+<img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='20%'/>
+<img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='20%'/>
 
 
 使用到的插件
-| path_provider  | <a href='https://pub.flutter-io.cn/packages/path_provider'>pub</a>  |
+| permission_handler  | <a href='https://pub.flutter-io.cn/packages/permission_handler'>pub</a>  |
 |---|---|
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
-参数
-
+可选参数
 |  参数名   | 说名  |
 |  ----  | ----  |
 | String title  | 标题 |
 | List<String> fileTypeEnd  | 展示的文件类型   默认：".pdf , .docx , .doc" |
 | String pdfImg  | pdf图标 |
 | String wordImg  | word图标 |
+| String exelImg  | exelImg图标 |
 | bool isScreen  | 默认关闭筛选 |
-| String directory  | 检索的目录 默认 /storage/emulated/0/ 安卓根目录  这个几乎不用传 用默认即可 |
-
+| int maxCount  | 可选最大总数 默认 9 |
 
 未来须实现日志
 |  参数名   | 说名  |
 |  ----  | ----  |
-| 文件类型筛选  | - |
 | 自定义图标  | - |
-| 本地存储上次检索的结果  | - |
+| ios端集成  | - |
 
 使用：
 ```java
@@ -43,7 +41,7 @@ flutter版本的一个文件选择器 开发中...
 ```
 
 ```java
-安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：
+安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：q
 <provider
    android:name="androidx.core.content.FileProvider"
    android:authorities="${applicationId}.fileProvider"
@@ -57,45 +55,25 @@ flutter版本的一个文件选择器 开发中...
 </provider>
 ```
 
-```java
-在 Android/app/src/main/res/xml 目录下 创建 filepaths.xml ,没有xml目录创建一个即可,内容如下：
 
-<?xml version="1.0" encoding="utf-8"?>
-<paths>
-<external-path
-name="external_storage_root"
-path="." />
-<files-path
-name="files-path"
-path="." />
-<cache-path
-name="cache-path"
-path="." />
-<!--/storage/emulated/0/Android/data/...-->
-<external-files-path
-name="external_file_path"
-path="." />
-<!--app 外部存储区域根目录下的文件 Context.getExternalCacheDir目录下的目录-->
-<external-cache-path
-name="external_cache_path"
-path="." />
-<!--配置root-path, 读取sd卡和一些应用分身的目录 -->
-<root-path
-name="root-path"
-path="" />
-
-</paths>
-```
+FileModelUtil的参数：
+|  参数名   | 说名  |
+|  ----  | ----  |
+| File file  | 文件 |
+| String fileName  | 文件名称 |
+| int fileSize | 文件大小 |
+| String filePath  | 文件路径 |
+| int fileDate  | 文件日期时间 |
 
 ```java
-/// 引用选择器
- FlatButton(
-  onPressed: (){
-    Navigator.push(
-      context,
-      new MaterialPageRoute(builder: (context) => FlutterFileSelector(
-        fileTypeEnd: [".pdf",".doc",".docx",".mp4"],//默认：[".pdf",".doc",".docx",]
-      )), ).then((value) => print(value));
+List<FileModelUtil> v = [];
+FlatButton(
+  onPressed: () {
+    Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
+          isScreen: true,
+          fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
+        ), ), ).then( (value) => setState( () => v = value),
+    );
   },
   child: Text("打开文件选择器"),
 ),

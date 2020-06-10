@@ -13,8 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   file_picker: any
-  path_provider: any
-  open_file: any
+  permission_handler: any
 
 dev_dependencies:
   flutter_test:

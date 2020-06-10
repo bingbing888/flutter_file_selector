@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutterfileselector/FileUtilModel.dart';
 import 'package:flutterfileselector/flutterfileselector.dart';
 import 'package:open_file/open_file.dart';
 
@@ -57,7 +59,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  FileSystemEntity v;
+  List<FileModelUtil> v;
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +80,10 @@ class _HomeState extends State<Home> {
             ),
             FlatButton(
               onPressed: () {
-                OpenFile.open(v.path);
+                OpenFile.open(v[0].filePath);
               },
               child: Text(
-                  "打开文件：  ${v != null ? v.absolute.resolveSymbolicLinksSync() : ''}"),
+                  "打开文件：  ${v != null ? v[0].fileName : ''}"),
             ),
           ],
         ),

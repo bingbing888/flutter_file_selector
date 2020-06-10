@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'FileUtilModel.dart';
 
 ///
 /// @DevTool: AndroidStudio
@@ -14,31 +16,25 @@ import 'package:path_provider/path_provider.dart';
 /// @FilePath: flutterfileselector.dart
 /// @Description: 文件选择器
 ///
-class Flutterfileselector {
-//  static const MethodChannel _channel =
-//      const MethodChannel('flutterfileselector');
-//
-//  static Future<String> get platformVersion async {
-//    final String version = await _channel.invokeMethod('getPlatformVersion');
-//    return version;
-//  }
-}
+
 
 class FlutterFileSelector extends StatefulWidget {
   String title;// 标题
   List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
   String pdfImg;// pdf图标
   String wordImg;// word图标
-  String directory;// 检索的目录 默认 /storage/emulated/0/ 安卓根目录
+  String exelImg;
   bool isScreen;// 默认关闭筛选
+  int maxCount;// 可选最大总数 默认个
   FlutterFileSelector(
       {
         this.title,
         this.fileTypeEnd,
         this.pdfImg,
         this.wordImg,
-        this.directory:"/storage/emulated/0/",
         this.isScreen:false,
+        this.exelImg,
+        this.maxCount:9
     }
       );
   @override
@@ -46,208 +42,190 @@ class FlutterFileSelector extends StatefulWidget {
 }
 
 class _FlutterFileSelectorState extends State<FlutterFileSelector> {
-  /// 检索到的文件
-  List<FileSystemEntity> files1 = [];
-  /// 展示的文件后缀
-  List<String> fileTypeEnd = [
-    ".pdf",
-    ".docx",
-    ".doc"
-  ];
-  bool _loading = false;
 
   /// 选择的文件
-  FileSystemEntity selectFs;
+  List<FileModelUtil> fileSelect = [];
+
+  /// 原生交互通道
+  static const MethodChannel _channel = const MethodChannel('flutterfileselector');
+
+  /// 解析到的原生返回的数据
+  static List<FileModelUtil> list = [];
+
+  /// error
+  static String errorMsg = "";
+
   @override
   void initState() {
-    _loading = true;
-    if(widget.fileTypeEnd!=null || widget.fileTypeEnd.length!=0){
-      fileTypeEnd = widget.fileTypeEnd;
-    }
+
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-    /// 先进来页面使用延迟加载
-    Timer.periodic(Duration(milliseconds: 350), (v){
-      v.cancel();
-      try {
-        filesDirs(Directory(widget.directory));
-      } finally {
-        _loading = false;
-        /// 按时间倒叙
-        files1.sort((a,b)=>(b.statSync().changed).compareTo(a.statSync().changed));
-        setState(() { });
-        print("加载结束了");
-        log(files1.join(","));
-      }
-    });
+    _checkPhone();
   }
 
-  filesDirs(Directory directory) {
-    List<FileSystemEntity>  fs = directory.listSync();
-    for(int i =0 ; i<fs.length ;i++){
-      //若是目录，则递归目录下的文件
-      if(FileSystemEntity.isDirectorySync(fs[i].path)){
-//        print("目录"+i.toString());
-        filesDirs(fs[i]);
-      }
-      //若是文件
-      if(FileSystemEntity.isFileSync(fs[i].path)){
-//        print("文件"+i.toString());
-        /// 后缀匹配
-        fileTypeEnd.forEach((element) {
-          if( fs[i].path.endsWith(element)){
-            files1.add(fs[i]);
-          }
-        });
+  _checkPhone(){
+    /// 判断平台
+    if (Platform.isAndroid) {
+      getFiles(widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]);
+    }else  if(Platform.isIOS) {
 
-      }
     }
+  }
+
+  /// 调用原生 得到文件+文件信息
+  void getFiles (typeList) async {
+
+    if (await Permission.storage.request().isGranted) {
+      errorMsg = "";
+      Map<String, Object> map = {"type": typeList};
+
+      final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
+
+      /// 如果原生返回空 return掉
+      if(listFileStr==null || listFileStr.length==0){
+        return;
+      }
+
+      list.clear();
+      listFileStr.forEach((f){
+        list.add(FileModelUtil(
+          fileDate: f["fileDate"],
+          fileName: f["fileName"],
+          filePath: f["filePath"],
+          fileSize: f["fileSize"],
+          file:File(f["filePath"]),
+        ));
+      });
+      ///降序
+      list.sort((a,b)=>b.file.statSync().changed.compareTo(a.file.statSync().changed));
+    }else{
+      errorMsg = "当前设备未允许读写权限，无法检索目录!";
+    }
+
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Column(
-        children: <Widget>[
-          /// appbar
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top,),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                InkWell(
-                  onTap: (){
-                    Navigator.pop(context);
-                  },
-                  child: Icon(Icons.chevron_left,color: Colors.grey[700],),
+      body:Builder(builder: (BuildContext context) {
+        if(errorMsg!=null && errorMsg!=""){
+          Scaffold.of(context).showSnackBar(SnackBar(content: new Text(errorMsg)));
+        }
+        return Column(
+          children: <Widget>[
+            /// appbar
+            Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 10,right: 10),
+                width: MediaQuery.of(context).size.width,
+                height: 40,
+                margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top,),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.chevron_left,color: Colors.grey[700],),
+                    ),
+                    Text("  ${widget.title ?? '文件选择器 '} ${fileSelect.length}/${widget.maxCount}",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
+                    InkWell(
+                      onTap: (){
+                        log("返回的类型："+fileSelect.runtimeType.toString());
+                        Navigator.pop(context,fileSelect);
+                      },
+                      child: Text("选择"),
+                    ),
+                  ],
                 ),
-                Text("  ${widget.title ?? '文件选择器'}",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
-                InkWell(
-                  onTap: (){
-                    Navigator.pop(context,selectFs);
-                  },
-                  child: Text("选择"),
-                ),
-              ],
+                color: Colors.grey[100]
             ),
-              color: Colors.grey[100]
-          ),
-          /// 提示
-          !widget.isScreen?SizedBox():Container(padding: EdgeInsets.only(left: 10,right: 10),width: MediaQuery.of(context).size.width,height: 25,alignment: Alignment.centerLeft,color: Colors.grey[100],child: Text("(检索全部时，系统文件较多会比较慢)",style: TextStyle(color: Colors.grey[400],fontSize: 12),),),
-         /// 筛选
-          !widget.isScreen?SizedBox():Container(
-            color: Colors.grey[100],
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(left: 10,right: 10),
-            child: Wrap(
-              alignment: WrapAlignment.start,
-              children: <Widget>[
-                OutlineButton(onPressed: (){
-                },child: Text("全部"),),
-                SizedBox(width: 5,),
-                OutlineButton(onPressed: (){
-                },child: Text("Word"),),
-                SizedBox(width: 5,),
-                OutlineButton(onPressed: (){
-                },child: Text("PDF"),),
-                SizedBox(width: 5,),
-                OutlineButton(onPressed: (){
-                },child: Text("微信"),),
-                SizedBox(width: 5,),
-                OutlineButton(onPressed: (){
-                },child: Text("QQ"),),
-              ],
+            /// 提示
+            !widget.isScreen?SizedBox():Container(padding: EdgeInsets.only(left: 10,right: 10),width: MediaQuery.of(context).size.width,height: 25,alignment: Alignment.centerLeft,color: Colors.grey[100],child: Text("(检索全部时，系统文件较多会比较慢)",style: TextStyle(color: Colors.grey[400],fontSize: 12),),),
+            /// 筛选
+            !widget.isScreen?SizedBox():Container(
+              color: Colors.grey[100],
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(left: 10,right: 10),
+              child: Wrap(
+                alignment: WrapAlignment.start,
+                children: <Widget>[
+                  OutlineButton(onPressed: (){
+                    getFiles([".pdf",".xls",".xlsx",".doc",".docx"]);
+                  },child: Text("全部"),),
+                  SizedBox(width: 5,),
+                  OutlineButton(onPressed: (){
+                    getFiles([".pdf"]);
+                  },child: Text("PDF"),),
+                  SizedBox(width: 5,),
+                  OutlineButton(onPressed: (){
+                    getFiles([".doc",".docx"]);
+                  },child: Text("Word"),),
+                  SizedBox(width: 5,),
+                  OutlineButton(onPressed: (){
+                    getFiles([".xls",".xlsx"]);
+                  },child: Text("Excel"),),
+                ],
+              ),
             ),
-          ),
-          /// 列表
-          Expanded(child: files1.length==0?Center(child: Text(_loading ? "正在检索文件,请稍等...":"当前目录为空"),):ListView.builder(
-            itemCount: files1.length,
-            padding: EdgeInsets.all(0),
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return InkWell(
-                onTap: () async{
-                  Navigator.pop(context,files1[index]);
-                },
-                child: CheckboxListTile(
-                  value: selectFs==files1[index],
+            /// 列表
+            Expanded(child: list.length==0?Center(child: Text("当前目录为空"),):ListView.builder(
+              itemCount: list.length,
+              padding: EdgeInsets.all(0),
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return CheckboxListTile(
+                  value: fileSelect.contains(list[index]),
                   onChanged: (bool value){
                     setState(() {
-                      selectFs = files1[index];
+                      /// 等于最大可选 拦截点击 并提示
+                      if(widget.maxCount==fileSelect.length){
+                        Scaffold.of(context).showSnackBar(SnackBar(content: new Text('最多可选${widget.maxCount}个文件')));
+                        return;
+                      }
+                      if(!fileSelect.contains(list[index])){
+                        fileSelect.add(list[index]);
+                      }else{
+                        fileSelect.removeAt(fileSelect.indexOf(list[index]));
+                      }
                     });
                   },
                   secondary: ClipRRect(
                     child: Container(
-                      color:_type(files1[index].resolveSymbolicLinksSync())["color"],
-                      width: 40,
-                      height: 40,
+                      color:_type(list[index].filePath)["color"],
+                      width: 55,
+                      height: 55,
                       alignment: Alignment.center,
-                      child: Text(_type(files1[index].resolveSymbolicLinksSync())["str"],style: TextStyle(color: Colors.white),),
+                      child: Text(_type(list[index].filePath)["str"],style: TextStyle(color: Colors.white),),
                     ),
                     borderRadius: BorderRadius.circular(3),
                   ),
-                  title: new Text("${files1[index].resolveSymbolicLinksSync().substring(files1[index].resolveSymbolicLinksSync().lastIndexOf("/")+1,files1[index].resolveSymbolicLinksSync().length)}",overflow: TextOverflow.ellipsis,),
+                  title: new Text("${list[index].fileName}",overflow: TextOverflow.ellipsis,),
                   subtitle: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(" ${files1[index].statSync().changed}",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
-                      Text(" ${(files1[index].statSync().size / 1024 / 1024).toStringAsFixed(2)} MB",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
+                      Text(" ${File(list[index].filePath).statSync().changed}",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
+                      Text(" ${(File(list[index].filePath).statSync().size / 1024 / 1024).toStringAsFixed(2)} MB",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
                     ],
                   ),
                   dense: false,
                   activeColor: Colors.blue[400],// 指定选中时勾选框的颜色
                   checkColor: Colors.white,
                   isThreeLine: false,
-                  selected: selectFs==files1[index],
-                ),
+                  selected: fileSelect.contains(list[index]),
+                );
+              },
+            ),)
+          ],
+        );
+      }),
 
-//                Container(
-//                    padding: EdgeInsets.all(5),
-//                    alignment: Alignment.centerLeft,
-//                    decoration: BoxDecoration(
-//                        border: Border(bottom: BorderSide(color: Colors.grey[200],width: 1))
-//                    ),
-//                    child: Column(
-//                      children: <Widget>[
-//                        Row(
-//                          children: <Widget>[
-//                            ClipRRect(
-//                              child: Container(
-//                                color:_type(files1[index].resolveSymbolicLinksSync())["color"],
-//                                width: 40,
-//                                height: 40,
-//                                alignment: Alignment.center,
-//                                child: Text(_type(files1[index].resolveSymbolicLinksSync())["str"],style: TextStyle(color: Colors.white),),
-//                              ),
-//                              borderRadius: BorderRadius.circular(3),
-//                            ),
-////                            Image.asset("${files1[index].resolveSymbolicLinksSync().contains(".pdf")? 'images/Pdf.png' : 'images/word.png'}",fit: BoxFit.fill,width: 35,height: 35,),
-//                            SizedBox(width: 15,),
-//                            Expanded(child: Text("${files1[index].resolveSymbolicLinksSync().substring(files1[index].resolveSymbolicLinksSync().lastIndexOf("/")+1,files1[index].resolveSymbolicLinksSync().length)}",overflow: TextOverflow.ellipsis,maxLines: 2,),),
-//                          ],
-//                        ),
-//                        SizedBox(height: 3,),
-//                        Row(
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Text(" ${files1[index].statSync().changed}",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
-//                            Text(" ${(files1[index].statSync().size / 1024 / 1024).toStringAsFixed(2)} MB",style: TextStyle(fontSize: 12,color: Colors.grey[400]),),
-//                          ],
-//                        ),
-//                      ],
-//                    )
-//                ),
-              );
-            },
-          ),)
-        ],
-      ),
     );
   }
 
@@ -260,8 +238,14 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
     }
     if(str.endsWith(".doc") || str.endsWith(".docx")){
       Map m = Map();
-      m["str"] = "Doc";
+      m["str"] = "Docx";
       m["color"] = Colors.blue[400];
+      return m;
+    }
+    if(str.endsWith(".xlsx") || str.endsWith(".xls")){
+      Map m = Map();
+      m["str"] = "Excel";
+      m["color"] = Colors.green[400];
       return m;
     }
     Map m = Map();
