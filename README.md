@@ -32,6 +32,7 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 ```java
 FlutterSelect(
+    btn: Text("这个按钮可以自定义"),
     isScreen: true,
     fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx"],
     valueChanged: (v){
