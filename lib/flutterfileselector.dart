@@ -182,8 +182,6 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                 ),
                 color: Colors.grey[100]
             ),
-            /// 提示
-            !widget.isScreen?SizedBox():Container(padding: EdgeInsets.only(left: 10,right: 10),width: MediaQuery.of(context).size.width,height: 25,alignment: Alignment.centerLeft,color: Colors.grey[100],child: Text("(检索全部时，系统文件较多会比较慢)",style: TextStyle(color: Colors.grey[400],fontSize: 12),),),
             /// 筛选
             !widget.isScreen?SizedBox():Container(
               color: Colors.grey[100],
