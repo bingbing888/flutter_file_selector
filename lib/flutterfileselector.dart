@@ -47,7 +47,7 @@ class _FlutterSelectState extends State<FlutterSelect> {
         type.add("."+t);
       });
 
-      log("当前的类型："+type.toString());
+      log("当前能选的类型："+type.toString());
 
       List<File> files = await FilePicker.getMultiFile(
         type: FileType.custom,
@@ -68,6 +68,7 @@ class _FlutterSelectState extends State<FlutterSelect> {
           file:f,
         ));
       });
+
       widget.valueChanged(list);
     }catch (e){
       print("FlutterFileSelect Error:"+e.toString());
@@ -82,7 +83,8 @@ class _FlutterSelectState extends State<FlutterSelect> {
       onTap: (){
         /// 判断平台
         if (Platform.isAndroid) {
-          Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
+
+          Navigator.push( context, MaterialPageRoute( builder: (context) => _FlutterFileSelector(
             isScreen: widget.isScreen ?? true,
             wordImg: widget.wordImg,
             exelImg: widget.exelImg,
@@ -92,7 +94,9 @@ class _FlutterSelectState extends State<FlutterSelect> {
             widget.valueChanged(value);
           } );
         }else  if(Platform.isIOS) {
+
           getFilesIos();
+
         }
       },
       child: widget.btn ?? Text("选择文件"),
@@ -101,7 +105,7 @@ class _FlutterSelectState extends State<FlutterSelect> {
 }
 
 /// 安卓端ui
-class FlutterFileSelector extends StatefulWidget {
+class _FlutterFileSelector extends StatefulWidget {
   String title;// 标题
   List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
   String pdfImg;// pdf图标
@@ -109,7 +113,7 @@ class FlutterFileSelector extends StatefulWidget {
   String exelImg;
   bool isScreen;// 默认关闭筛选
   int maxCount;// 可选最大总数 默认个
-  FlutterFileSelector(
+  _FlutterFileSelector(
       {
         this.title,
         this.fileTypeEnd,
@@ -124,7 +128,7 @@ class FlutterFileSelector extends StatefulWidget {
   _FlutterFileSelectorState createState() => _FlutterFileSelectorState();
 }
 
-class _FlutterFileSelectorState extends State<FlutterFileSelector> {
+class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
 
   /// 选择的文件
   List<FileModelUtil> fileSelect = [];
@@ -140,7 +144,6 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
   @override
   void initState() {
-//    _checkPhone();
   getFilesAndroid();
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
@@ -148,24 +151,16 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
   }
 
-//  _checkPhone(){
-//    /// 判断平台
-//    if (Platform.isAndroid) {
-//      getFilesAndroid();
-//    }else  if(Platform.isIOS) {
-//      getFilesIos();
-//      return;
-//    }
-//  }
-
-
   /// 调用原生 得到文件+文件信息
   void getFilesAndroid () async {
 
     try{
       if (await Permission.storage.request().isGranted) {
+
         errorMsg = "";
-        log("当前的类型："+widget.fileTypeEnd.toString());
+
+        log("当前能选的类型："+widget.fileTypeEnd.toString());
+
         Map<String, Object> map = {"type": widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]};
 
         final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
