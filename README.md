@@ -9,6 +9,7 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 <img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='30%'/>
 <img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='30%'/>
+<img src='/images/微信图片_20200610154935.png' width='30%'/>
 
 
 使用到的插件
