@@ -7,8 +7,8 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 <a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk下载体验,ios暂无</a>
 
-<img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='20%'/>
-<img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='20%'/>
+<img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='30%'/>
+<img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='30%'/>
 
 
 使用到的插件
@@ -18,7 +18,30 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 |---|---|
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
-可选参数
+使用：
+```java
+   # 在pubspec.yaml 中引入依赖 方式1
+  flutterfileselector:
+    git:
+      url: https://gitee.com/jrnet/flutter_file_selector
+
+ # 在pubspec.yaml 中引入依赖 方式2
+ flutterfileselector: ^0.0.1
+
+```
+
+```java
+FlutterSelect(
+    isScreen: true,
+    fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx"],
+    valueChanged: (v){
+        // v 是 List<FileModelUtil>
+        print(v);
+    },
+),
+```
+
+FlutterSelect可选参数
 |  参数名   | 说名  |
 |  ----  | ----  |
 | String title  | 标题 |
@@ -29,22 +52,23 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 | bool isScreen  | 默认关闭筛选 |
 | int maxCount  | 可选最大总数 默认 9 |
 
+FileModelUtil的参数：
+|  参数名   | 说名  |
+|  ----  | ----  |
+| File file  | 文件 |
+| String fileName  | 文件名称 |
+| int fileSize | 文件大小 |
+| String filePath  | 文件路径 |
+| int fileDate  | 文件日期时间 |
+
 未来须实现日志
 |  参数名   | 说名  |
 |  ----  | ----  |
 | 自定义图标  | - |
 
-使用：
+<h3>注意：</h3>
+<h5>安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：</h5>
 ```java
-   # 引入依赖
-  flutterfileselector:
-    git:
-      url: https://gitee.com/jrnet/flutter_file_selector
-
-```
-
-```java
-安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：q
 <provider
    android:name="androidx.core.content.FileProvider"
    android:authorities="${applicationId}.fileProvider"
@@ -59,26 +83,5 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 ```
 
 
-FileModelUtil的参数：
-|  参数名   | 说名  |
-|  ----  | ----  |
-| File file  | 文件 |
-| String fileName  | 文件名称 |
-| int fileSize | 文件大小 |
-| String filePath  | 文件路径 |
-| int fileDate  | 文件日期时间 |
 
-```java
-List<FileModelUtil> v = [];
-FlatButton(
-  onPressed: () {
-    Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
-          isScreen: true,
-          fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
-        ), ), ).then( (value) => setState( () => v = value),
-    );
-  },
-  child: Text("打开文件选择器"),
-),
-```
 

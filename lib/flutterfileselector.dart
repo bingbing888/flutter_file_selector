@@ -83,6 +83,9 @@ class _FlutterSelectState extends State<FlutterSelect> {
         if (Platform.isAndroid) {
           Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
             isScreen: widget.isScreen ?? true,
+            wordImg: widget.wordImg,
+            exelImg: widget.exelImg,
+            pdfImg: widget.pdfImg,
             fileTypeEnd: widget.fileTypeEnd ?? [".pdf", ".doc", ".docx",".xls",".xlsx"],
           ), ), ).then( (value) {
             widget.valueChanged(value);
