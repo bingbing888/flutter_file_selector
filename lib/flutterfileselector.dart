@@ -90,14 +90,14 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
      files.forEach((f){
        list.add(FileModelUtil(
-         fileDate: f.statSync().changed.millisecond,
+         fileDate: f.statSync().changed.millisecondsSinceEpoch,
          fileName: f.resolveSymbolicLinksSync().substring(f.resolveSymbolicLinksSync().lastIndexOf("/")+1,f.resolveSymbolicLinksSync().length),
          filePath: f.path,
          fileSize:f.statSync().size,
          file:f,
        ));
      });
-     Navigator.pop(context,files);
+     Navigator.pop(context,list);
    }catch (e){
      print("FlutterFileSelect Error:"+e.toString());
    }
