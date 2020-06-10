@@ -18,7 +18,86 @@ import 'FileUtilModel.dart';
 /// @Description: 文件选择器
 /// 顺序按最近访问的时间排序
 ///
+class FlutterSelect extends StatefulWidget {
+  Widget btn;// 按钮
+  String title;// 标题
+  List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
+  String pdfImg;// pdf图标
+  String wordImg;// word图标
+  String exelImg;
+  bool isScreen;// 默认关闭筛选
+  int maxCount;// 可选最大总数 默认9个
+  ValueChanged<List<FileModelUtil>> valueChanged;
+  FlutterSelect({this.btn,this.fileTypeEnd,this.maxCount,this.exelImg,this.isScreen,this.pdfImg,this.title,this.wordImg,this.valueChanged});
+  @override
+  _FlutterSelectState createState() => _FlutterSelectState();
+}
 
+class _FlutterSelectState extends State<FlutterSelect> {
+
+  ///  IOS平台 直接使用FilePicker插件
+  void getFilesIos () async{
+
+    try{
+      List<FileModelUtil> list = [];
+      List<String> type = [];
+
+      widget.fileTypeEnd.forEach((t){
+        type.add("."+t);
+      });
+
+      log("当前的类型："+type.toString());
+
+      List<File> files = await FilePicker.getMultiFile(
+        type: FileType.custom,
+        allowedExtensions: type ?? [ "pdf", "docx", "doc" ],
+      );
+
+      if(files==null|| files.length==0){
+        return;
+      }
+
+      files.forEach((f){
+        list.add(
+            FileModelUtil(
+          fileDate: f.statSync().changed.millisecondsSinceEpoch,
+          fileName: f.resolveSymbolicLinksSync().substring(f.resolveSymbolicLinksSync().lastIndexOf("/")+1,f.resolveSymbolicLinksSync().length),
+          filePath: f.path,
+          fileSize:f.statSync().size,
+          file:f,
+        ));
+      });
+      widget.valueChanged(list);
+    }catch (e){
+      print("FlutterFileSelect Error:"+e.toString());
+    }
+
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return  InkWell(
+      onTap: (){
+        /// 判断平台
+        if (Platform.isAndroid) {
+          Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
+            isScreen: widget.isScreen ?? true,
+            fileTypeEnd: widget.fileTypeEnd ?? [".pdf", ".doc", ".docx",".xls",".xlsx"],
+          ), ), ).then( (value) {
+            widget.valueChanged(value);
+          } );
+        }else  if(Platform.isIOS) {
+          getFilesIos();
+          return;
+        }
+      },
+      child: widget.btn ?? Text("选择文件"),
+    );
+  }
+}
+
+/// 安卓端ui
 class FlutterFileSelector extends StatefulWidget {
   String title;// 标题
   List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
@@ -58,61 +137,25 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
   @override
   void initState() {
-    _checkPhone();
+//    _checkPhone();
+  getFilesAndroid();
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
 
   }
 
-  _checkPhone(){
-    /// 判断平台
-    if (Platform.isAndroid) {
-      getFilesAndroid();
-    }else  if(Platform.isIOS) {
-      getFilesIos();
-      return;
-    }
-  }
+//  _checkPhone(){
+//    /// 判断平台
+//    if (Platform.isAndroid) {
+//      getFilesAndroid();
+//    }else  if(Platform.isIOS) {
+//      getFilesIos();
+//      return;
+//    }
+//  }
 
-  ///  IOS平台 直接使用FilePicker插件
-  void getFilesIos () async{
 
-   try{
-
-     List<String> type = [];
-
-     widget.fileTypeEnd.forEach((t){
-       type.add("."+t);
-     });
-
-     log("当前的类型："+type.toString());
-     
-     List<File> files = await FilePicker.getMultiFile(
-       type: FileType.custom,
-       allowedExtensions: type ?? [ "pdf", "docx", "doc" ],
-     );
-
-     if(files==null|| files.length==0){
-       return;
-     }
-
-     files.forEach((f){
-       list.add(FileModelUtil(
-         fileDate: f.statSync().changed.millisecondsSinceEpoch,
-         fileName: f.resolveSymbolicLinksSync().substring(f.resolveSymbolicLinksSync().lastIndexOf("/")+1,f.resolveSymbolicLinksSync().length),
-         filePath: f.path,
-         fileSize:f.statSync().size,
-         file:f,
-       ));
-     });
-     Navigator.pop(context);
-     Navigator.pop(context,list);
-   }catch (e){
-     print("FlutterFileSelect Error:"+e.toString());
-   }
-
-  }
   /// 调用原生 得到文件+文件信息
   void getFilesAndroid () async {
 
@@ -203,22 +246,22 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                 children: <Widget>[
                   OutlineButton(onPressed: (){
                     widget.fileTypeEnd = [".pdf",".xls",".xlsx",".doc",".docx"];
-                    _checkPhone();
+                    getFilesAndroid();
                   },child: Text("全部"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
                     widget.fileTypeEnd = [".pdf"];
-                    _checkPhone();
+                    getFilesAndroid();
                   },child: Text("PDF"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
                     widget.fileTypeEnd = [".doc",".docx"];
-                    _checkPhone();
+                    getFilesAndroid();
                   },child: Text("Word"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
                     widget.fileTypeEnd = [".xls",".xlsx"];
-                    _checkPhone();
+                    getFilesAndroid();
                   },child: Text("Excel"),),
                 ],
               ),
