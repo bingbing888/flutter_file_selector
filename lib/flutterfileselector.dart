@@ -82,12 +82,12 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
      List<String> type = [];
 
-     if(widget.fileTypeEnd!=null && widget.fileTypeEnd.length>0){
-       widget.fileTypeEnd.forEach((t){
-         type.add("."+t);
-       });
-     }
+     widget.fileTypeEnd.forEach((t){
+       type.add("."+t);
+     });
 
+     log("当前的类型："+type.toString());
+     
      List<File> files = await FilePicker.getMultiFile(
        type: FileType.custom,
        allowedExtensions: type ?? [ "pdf", "docx", "doc" ],
@@ -119,6 +119,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
     try{
       if (await Permission.storage.request().isGranted) {
         errorMsg = "";
+        log("当前的类型："+widget.fileTypeEnd.toString());
         Map<String, Object> map = {"type": widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]};
 
         final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
