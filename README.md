@@ -1,7 +1,7 @@
 # flutter_file_selector
 
 #### 介绍
-flutter版本的一个文件选择器
+flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 布局使用flutter，安卓使用原生实现，ios使用 file_picker插件得到返回的
 

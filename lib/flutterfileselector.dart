@@ -16,6 +16,7 @@ import 'FileUtilModel.dart';
 /// @FileName: flutterfileselector
 /// @FilePath: flutterfileselector.dart
 /// @Description: 文件选择器
+/// 顺序按最近访问的时间排序
 ///
 
 class FlutterFileSelector extends StatefulWidget {
@@ -128,7 +129,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
           ));
         });
         ///降序
-        list.sort((a,b)=>b.file.statSync().changed.compareTo(a.file.statSync().changed));
+//        list.sort((a,b)=>b.file.statSync().changed.compareTo(a.file.statSync().changed));
       }else{
         errorMsg = "当前设备未允许读写权限，无法检索目录!";
       }

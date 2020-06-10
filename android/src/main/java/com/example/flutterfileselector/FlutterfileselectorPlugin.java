@@ -63,7 +63,7 @@ public class FlutterfileselectorPlugin implements FlutterPlugin, MethodCallHandl
 
       try{
         // 得到对应类型文件  type.toArray(new String[type.size()])转换类型
-        List<String> list   = FileUtilFlutter.getSpecificTypeOfFile(context, type.toArray(new String[type.size()]));
+        List<String> list   = FileUtilFlutter.getTypeOfFile(context, type.toArray(new String[type.size()]));
         File f ;
         for(String item : list){
           f = new File(item);
