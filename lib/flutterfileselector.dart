@@ -79,9 +79,18 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
   void getFilesIos () async{
 
    try{
+
+     List<String> type = [];
+
+     if(widget.fileTypeEnd!=null && widget.fileTypeEnd.length>0){
+       widget.fileTypeEnd.forEach((t){
+         type.add("."+t);
+       });
+     }
+
      List<File> files = await FilePicker.getMultiFile(
        type: FileType.custom,
-       allowedExtensions: widget.fileTypeEnd ?? [ "pdf", "docx", "doc" ],
+       allowedExtensions: type ?? [ "pdf", "docx", "doc" ],
      );
 
      if(files==null|| files.length==0){
