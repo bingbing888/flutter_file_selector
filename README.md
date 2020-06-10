@@ -69,6 +69,7 @@ FileModelUtil的参数：
 
 <h3>注意：</h3>
 <h5>安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：</h5>
+
 ```java
 <provider
    android:name="androidx.core.content.FileProvider"
