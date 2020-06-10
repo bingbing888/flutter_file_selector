@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,8 +17,6 @@ import 'FileUtilModel.dart';
 /// @FilePath: flutterfileselector.dart
 /// @Description: 文件选择器
 ///
-
-
 class FlutterFileSelector extends StatefulWidget {
   String title;// 标题
   List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
@@ -67,45 +66,81 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
   _checkPhone(){
     /// 判断平台
     if (Platform.isAndroid) {
-      getFiles(widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]);
+      getFilesAndroid();
     }else  if(Platform.isIOS) {
-
+      getFilesIos();
     }
   }
 
+  ///  IOS平台 直接使用FilePicker插件
+  void getFilesIos () async{
+
+   try{
+     List<File> files = await FilePicker.getMultiFile(
+       type: FileType.custom,
+       allowedExtensions: widget.fileTypeEnd ?? [ "pdf", "docx", "doc" ],
+     );
+
+     if(files==null|| files.length==0){
+       return;
+     }
+
+     files.forEach((f){
+       list.add(FileModelUtil(
+         fileDate: f.statSync().changed.millisecond,
+         fileName: f.resolveSymbolicLinksSync().substring(f.resolveSymbolicLinksSync().lastIndexOf("/")+1,f.resolveSymbolicLinksSync().length),
+         filePath: f.path,
+         fileSize:f.statSync().size,
+         file:f,
+       ));
+     });
+     setState(() {
+
+     });
+   }catch (e){
+     print("FlutterFileSelect Error:"+e.toString());
+   }
+
+  }
   /// 调用原生 得到文件+文件信息
-  void getFiles (typeList) async {
+  void getFilesAndroid () async {
 
-    if (await Permission.storage.request().isGranted) {
-      errorMsg = "";
-      Map<String, Object> map = {"type": typeList};
+    try{
+      if (await Permission.storage.request().isGranted) {
+        errorMsg = "";
+        Map<String, Object> map = {"type": widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]};
 
-      final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
+        final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
 
-      /// 如果原生返回空 return掉
-      if(listFileStr==null || listFileStr.length==0){
-        return;
+        /// 如果原生返回空 return掉
+        if(listFileStr==null || listFileStr.length==0){
+          return;
+        }
+
+        list.clear();
+        listFileStr.forEach((f){
+          list.add(FileModelUtil(
+            fileDate: f["fileDate"],
+            fileName: f["fileName"],
+            filePath: f["filePath"],
+            fileSize: f["fileSize"],
+            file:File(f["filePath"]),
+          ));
+        });
+        ///降序
+        list.sort((a,b)=>b.file.statSync().changed.compareTo(a.file.statSync().changed));
+      }else{
+        errorMsg = "当前设备未允许读写权限，无法检索目录!";
       }
 
-      list.clear();
-      listFileStr.forEach((f){
-        list.add(FileModelUtil(
-          fileDate: f["fileDate"],
-          fileName: f["fileName"],
-          filePath: f["filePath"],
-          fileSize: f["fileSize"],
-          file:File(f["filePath"]),
-        ));
+      setState(() {
+
       });
-      ///降序
-      list.sort((a,b)=>b.file.statSync().changed.compareTo(a.file.statSync().changed));
-    }else{
-      errorMsg = "当前设备未允许读写权限，无法检索目录!";
+
+    }catch (e){
+      print("FlutterFileSelect Error:"+e.toString());
     }
 
-    setState(() {
-
-    });
   }
 
   @override
@@ -157,19 +192,23 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
                 alignment: WrapAlignment.start,
                 children: <Widget>[
                   OutlineButton(onPressed: (){
-                    getFiles([".pdf",".xls",".xlsx",".doc",".docx"]);
+                    widget.fileTypeEnd = [".pdf",".xls",".xlsx",".doc",".docx"];
+                    _checkPhone();
                   },child: Text("全部"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
-                    getFiles([".pdf"]);
+                    widget.fileTypeEnd = [".pdf"];
+                    _checkPhone();
                   },child: Text("PDF"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
-                    getFiles([".doc",".docx"]);
+                    widget.fileTypeEnd = [".doc",".docx"];
+                    _checkPhone();
                   },child: Text("Word"),),
                   SizedBox(width: 5,),
                   OutlineButton(onPressed: (){
-                    getFiles([".xls",".xlsx"]);
+                    widget.fileTypeEnd = [".xls",".xlsx"];
+                    _checkPhone();
                   },child: Text("Excel"),),
                 ],
               ),
