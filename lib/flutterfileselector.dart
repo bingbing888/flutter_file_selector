@@ -39,6 +39,7 @@ class _FlutterSelectState extends State<FlutterSelect> {
   void getFilesIos () async{
 
     try{
+
       List<FileModelUtil> list = [];
       List<String> type = [];
 
@@ -92,7 +93,6 @@ class _FlutterSelectState extends State<FlutterSelect> {
           } );
         }else  if(Platform.isIOS) {
           getFilesIos();
-          return;
         }
       },
       child: widget.btn ?? Text("选择文件"),
