@@ -17,6 +17,7 @@ import 'FileUtilModel.dart';
 /// @FilePath: flutterfileselector.dart
 /// @Description: 文件选择器
 ///
+
 class FlutterFileSelector extends StatefulWidget {
   String title;// 标题
   List<String> fileTypeEnd;// 展示的文件后缀   默认：".pdf , .docx , .doc"
@@ -56,11 +57,11 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
   @override
   void initState() {
-
+    _checkPhone();
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-    _checkPhone();
+
   }
 
   _checkPhone(){
@@ -69,6 +70,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
       getFilesAndroid();
     }else  if(Platform.isIOS) {
       getFilesIos();
+      return;
     }
   }
 
@@ -94,9 +96,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
          file:f,
        ));
      });
-     setState(() {
-
-     });
+     Navigator.pop(context,files);
    }catch (e){
      print("FlutterFileSelect Error:"+e.toString());
    }

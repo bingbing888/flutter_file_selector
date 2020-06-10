@@ -1,7 +1,9 @@
 # flutter_file_selector
 
 #### 介绍
-flutter版本的一个文件选择器 开发中...
+flutter版本的一个文件选择器
+
+布局使用flutter，安卓使用原生实现，ios使用 file_picker插件得到返回的
 
 <a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk下载体验,ios暂无</a>
 
@@ -10,6 +12,8 @@ flutter版本的一个文件选择器 开发中...
 
 
 使用到的插件
+|  插件依赖   | pub仓库地址  |
+|  ----  | ----  |
 | permission_handler  | <a href='https://pub.flutter-io.cn/packages/permission_handler'>pub</a>  |
 |---|---|
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
@@ -29,7 +33,6 @@ flutter版本的一个文件选择器 开发中...
 |  参数名   | 说名  |
 |  ----  | ----  |
 | 自定义图标  | - |
-| ios端集成  | - |
 
 使用：
 ```java
