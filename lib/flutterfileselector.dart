@@ -203,7 +203,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
         if(errorMsg!=null && errorMsg!=""){
           Scaffold.of(context).showSnackBar(SnackBar(content: new Text(errorMsg)));
         }
-        return Column(
+        return errorMsg!=null?SizedBox():Column(
           children: <Widget>[
             /// appbar
             Container(
