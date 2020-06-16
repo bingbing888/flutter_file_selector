@@ -200,9 +200,6 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       body:Builder(builder: (BuildContext context) {
-        if(errorMsg!=null && errorMsg!=""){
-          Scaffold.of(context).showSnackBar(SnackBar(content: new Text(errorMsg)));
-        }
         return errorMsg!=null?SizedBox():Column(
           children: <Widget>[
             /// appbar
