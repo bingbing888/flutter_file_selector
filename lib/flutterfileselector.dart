@@ -200,7 +200,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       body:Builder(builder: (BuildContext context) {
-        return errorMsg!=null?SizedBox():Column(
+        return Column(
           children: <Widget>[
             /// appbar
             Container(
