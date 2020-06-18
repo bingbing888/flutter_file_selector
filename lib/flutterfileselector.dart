@@ -145,10 +145,10 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   @override
   void initState() {
   
-    WidgetsFlutterBinding.ensureInitialized();
+    //WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds:300),(){
+    Future.delayed(Duration(milliseconds:500),(){
       getFilesAndroid();
     });
   }
