@@ -144,11 +144,13 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
 
   @override
   void initState() {
-  getFilesAndroid();
+  
     WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-
+    Future.delayed(Duration(milliseconds:300),(){
+      getFilesAndroid();
+    });
   }
 
   /// 调用原生 得到文件+文件信息
