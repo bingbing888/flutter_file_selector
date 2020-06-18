@@ -89,6 +89,7 @@ class _FlutterSelectState extends State<FlutterSelect> {
             wordImg: widget.wordImg,
             exelImg: widget.exelImg,
             pdfImg: widget.pdfImg,
+            maxCount:widget.maxCount,
             fileTypeEnd: widget.fileTypeEnd ?? [".pdf", ".doc", ".docx",".xls",".xlsx"],
           ), ), ).then( (value) {
             widget.valueChanged(value);
@@ -148,7 +149,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
     //WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds:500),(){
+    Future.delayed(Duration(milliseconds:300),(){
       getFilesAndroid();
     });
   }
