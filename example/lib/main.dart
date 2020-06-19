@@ -81,7 +81,8 @@ class _HomeState extends State<Home> {
               /// 往数组里添加需要展示出来选择的格式
               fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
               valueChanged: (v){
-                v = v;
+                print(v[0].filePath);
+                this.v = v;
                 setState(() {
 
                 });
