@@ -143,12 +143,14 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   /// error
   static String errorMsg = "";
 
+  List<String> fileTypeEnd = [];
   @override
   void initState() {
   
     //WidgetsFlutterBinding.ensureInitialized();
     // TODO: implement initState
     super.initState();
+    fileTypeEnd = widget.fileTypeEnd;
     Future.delayed(Duration(milliseconds:300),(){
       getFilesAndroid();
     });
@@ -243,7 +245,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                 alignment: WrapAlignment.start,
                 children: <Widget>[
                   OutlineButton(onPressed: (){
-                    widget.fileTypeEnd = [".pdf",".xls",".xlsx",".doc",".docx"];
+                    widget.fileTypeEnd = fileTypeEnd;
                     getFilesAndroid();
                   },child: Text("全部"),),
                   SizedBox(width: 5,),

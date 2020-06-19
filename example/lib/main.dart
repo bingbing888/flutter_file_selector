@@ -68,15 +68,25 @@ class _HomeState extends State<Home> {
       body: Center(
         child: Column(
           children: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.push( context, MaterialPageRoute( builder: (context) => FlutterFileSelector(
-                      isScreen: true,
-                      fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
-                    ), ), ).then( (value) => setState( () => v = value),
-                );
+            FlutterSelect(
+              /// 标题
+              title: "选择文档",
+              /// 按钮
+              btn: Text("选择文档"),
+              /// 最大可选
+              maxCount: 1,
+              /// 开启筛选
+              isScreen: true,
+              /// 选择器展示的文件格式
+              /// 往数组里添加需要展示出来选择的格式
+              fileTypeEnd: [".pdf", ".doc", ".docx","xls","xlsx"],
+              valueChanged: (v){
+                v = v;
+                setState(() {
+
+                });
+
               },
-              child: Text("打开文件选择器"),
             ),
             FlatButton(
               onPressed: () {
