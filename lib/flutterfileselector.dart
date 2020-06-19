@@ -144,6 +144,8 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   static String errorMsg = "";
 
   List<String> fileTypeEnd = [];
+
+  int btnIndex = 0;
   @override
   void initState() {
   
@@ -238,32 +240,42 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
             ),
             /// 筛选
             !widget.isScreen?SizedBox():Container(
-              color: Colors.grey[100],
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+
+              ),
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(left: 10,right: 10),
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                children: <Widget>[
-                  OutlineButton(onPressed: (){
+              height: 45,
+              child: DropdownButton(
+                hint: Text('选择类型'),
+                items: [
+                  DropdownMenuItem(child: Text('全部'), value: 1),
+                  DropdownMenuItem(child: Text('PDF'), value: 2),
+                  DropdownMenuItem(child: Text('Word'), value: 3),
+                  DropdownMenuItem(child: Text('Excel'), value: 4),
+                ], onChanged: (value) {
+                switch (value){
+                  case 1:
                     widget.fileTypeEnd = fileTypeEnd;
                     getFilesAndroid();
-                  },child: Text("全部"),),
-                  SizedBox(width: 5,),
-                  OutlineButton(onPressed: (){
+                    return;
+                  case 2:
                     widget.fileTypeEnd = [".pdf"];
                     getFilesAndroid();
-                  },child: Text("PDF"),),
-                  SizedBox(width: 5,),
-                  OutlineButton(onPressed: (){
-                    widget.fileTypeEnd = [".doc",".docx"];
+                    return;
+                  case 3:
+                    widget.fileTypeEnd = [".doc", ".docx"];
                     getFilesAndroid();
-                  },child: Text("Word"),),
-                  SizedBox(width: 5,),
-                  OutlineButton(onPressed: (){
+                    return;
+                  case 4:
                     widget.fileTypeEnd = [".xls",".xlsx"];
                     getFilesAndroid();
-                  },child: Text("Excel"),),
-                ],
+                    return;
+                  default:
+                    return;
+                }
+              },
               ),
             ),
             /// 列表
@@ -330,7 +342,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
     }
     if(str.endsWith(".doc") || str.endsWith(".docx")){
       Map m = Map();
-      m["str"] = "Docx";
+      m["str"] = "Word";
       m["color"] = Colors.blue[400];
       return m;
     }
