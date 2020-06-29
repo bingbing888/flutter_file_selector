@@ -5,7 +5,7 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 布局使用flutter，安卓使用原生实现，ios使用 file_picker插件得到返回的
 
-<a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk下载体验,ios暂无</a>
+<a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验,ios暂无</a>
 
 <img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='30%'/>
 <img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='30%'/>
