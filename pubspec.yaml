@@ -2,7 +2,7 @@ name: flutterfileselector
 description: Flutter plugin for getting commonly used locations on the Android &
   iOS file systems, such as the temp and app data directories.
 homepage: https://gitee.com/jrnet/flutter_file_selector
-version: 0.0.1
+version: 0.0.2
 
 
 environment:

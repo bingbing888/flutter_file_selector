@@ -7,8 +7,9 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 <a href='https://gitee.com/jrnet/flutter_file_selector/raw/master/example/build/app/outputs/apk/release/app-release.apk'>apk下载体验,ios暂无</a>
 
-<img src='/93647B559FE5554940720C3E55B43DDE.jpg' width='30%'/>
-<img src='/F1D97A4DECD54AFBE1C31D77BD15BC2B.jpg' width='30%'/>
+<img src='/1.png' width='40%'/>
+<img src='/2.png' width='40%'/>
+<img src='/3.png' width='40%'/>
 <img src='/images/微信图片_20200610154935.png' width='30%'/>
 
 

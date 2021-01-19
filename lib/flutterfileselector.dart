@@ -153,6 +153,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
     // TODO: implement initState
     super.initState();
     fileTypeEnd = widget.fileTypeEnd;
+    fileTypeEnd.insert(0, "全部");
     Future.delayed(Duration(milliseconds:300),(){
       getFilesAndroid();
     });
@@ -173,11 +174,13 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
         final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
 
         /// 如果原生返回空 return掉
-        if(listFileStr==null || listFileStr.length==0){
-          return;
-        }
+        // if(listFileStr==null || listFileStr.length==0){
+        //   list.clear();
+        //   return;
+        // }
 
         list.clear();
+        print("原生返回 不为空");
         listFileStr.forEach((f){
           list.add(FileModelUtil(
             fileDate: f["fileDate"],
@@ -227,13 +230,13 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                       child: Icon(Icons.chevron_left,color: Colors.grey[700],),
                     ),
                     Text("  ${widget.title ?? '文件选择器 '} ${fileSelect.length}/${widget.maxCount}",style: TextStyle(height: 1.1,fontSize: 16,color: Colors.grey[700]),),
-                    InkWell(
+                    fileSelect.length > 0 ? InkWell(
                       onTap: (){
                         log("返回的类型："+fileSelect.runtimeType.toString());
                         Navigator.pop(context,fileSelect);
                       },
                       child: Text("选择"),
-                    ),
+                    ) : Text("选择",style: TextStyle(color: Colors.transparent),),
                   ],
                 ),
                 color: Colors.grey[100]
@@ -247,39 +250,36 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(left: 10,right: 10),
               height: 45,
-              child: DropdownButton(
-                hint: Text('选择类型'),
-                items: [
-                  DropdownMenuItem(child: Text('全部'), value: 1),
-                  DropdownMenuItem(child: Text('PDF'), value: 2),
-                  DropdownMenuItem(child: Text('Word'), value: 3),
-                  DropdownMenuItem(child: Text('Excel'), value: 4),
-                ], onChanged: (value) {
-                switch (value){
-                  case 1:
-                    widget.fileTypeEnd = fileTypeEnd;
-                    getFilesAndroid();
-                    return;
-                  case 2:
-                    widget.fileTypeEnd = [".pdf"];
-                    getFilesAndroid();
-                    return;
-                  case 3:
-                    widget.fileTypeEnd = [".doc", ".docx"];
-                    getFilesAndroid();
-                    return;
-                  case 4:
-                    widget.fileTypeEnd = [".xls",".xlsx"];
-                    getFilesAndroid();
-                    return;
-                  default:
-                    return;
-                }
-              },
+              child:  Container(
+                width: 80,
+                child: DropdownButtonHideUnderline(
+                  child: ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButton(
+                      underline: Container(color: Colors.white),
+                      style: Theme.of(context).textTheme.subtitle2,
+                      elevation: 8,
+                      hint: Text('选择类型'),
+                      items: List.generate(fileTypeEnd.length, (index) {
+                        return DropdownMenuItem(child: Text(fileTypeEnd[index]), value: index,);
+                      }),
+                      onChanged: (value) {
+                        // 0是全部
+                        if (value == 0){
+                          widget.fileTypeEnd = fileTypeEnd;
+                          getFilesAndroid();
+                        }else{
+                          widget.fileTypeEnd = [fileTypeEnd[value]];
+                          getFilesAndroid();
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
             /// 列表
-            Expanded(child: list.length==0?Center(child: Text("当前目录为空"),):ListView.builder(
+            Expanded(child: list.length==0?Center(child: Text("没有文件~"),):ListView.builder(
               itemCount: list.length,
               padding: EdgeInsets.all(0),
               physics: BouncingScrollPhysics(),
@@ -287,18 +287,17 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                 return CheckboxListTile(
                   value: fileSelect.contains(list[index]),
                   onChanged: (bool value){
-                    setState(() {
+                    if(!fileSelect.contains(list[index])){
                       /// 等于最大可选 拦截点击 并提示
                       if(widget.maxCount==fileSelect.length){
                         Scaffold.of(context).showSnackBar(SnackBar(content: new Text('最多可选${widget.maxCount}个文件')));
                         return;
                       }
-                      if(!fileSelect.contains(list[index])){
-                        fileSelect.add(list[index]);
-                      }else{
-                        fileSelect.removeAt(fileSelect.indexOf(list[index]));
-                      }
-                    });
+                      fileSelect.add(list[index]);
+                    }else{
+                      fileSelect.removeAt(fileSelect.indexOf(list[index]));
+                    }
+                    setState(() { });
                   },
                   secondary: ClipRRect(
                     child: Container(
