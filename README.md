@@ -25,6 +25,7 @@ ios使用 file_picker插件得到返回的
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
 <h3>示例：</h3>
+
 ```java
    # 在pubspec.yaml 中引入依赖 方式1
   flutterfileselector:
@@ -33,7 +34,6 @@ ios使用 file_picker插件得到返回的
 
  # 在pubspec.yaml 中引入依赖 方式2
  flutterfileselector: ^0.0.1
-
 ```
 
 ```java
