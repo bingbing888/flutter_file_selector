@@ -212,6 +212,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
       body:Builder(builder: (BuildContext context) {
         return Column(
           children: <Widget>[
+            Image.asset("images/word.png"),
             /// appbar
             Container(
                 alignment: Alignment.centerLeft,
@@ -324,7 +325,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                   selected: fileSelect.contains(list[index]),
                 );
               },
-            ),)
+            ),),
           ],
         );
       }),
@@ -349,6 +350,12 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
       Map m = Map();
       m["str"] = "Excel";
       m["color"] = Colors.green[400];
+      return m;
+    }
+    if(str.endsWith(".txt")){
+      Map m = Map();
+      m["str"] = "TxT";
+      m["color"] = Colors.grey[400];
       return m;
     }
     Map m = Map();
