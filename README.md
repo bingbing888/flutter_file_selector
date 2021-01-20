@@ -5,9 +5,9 @@ flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
 布局使用Flutter布局，安卓使用原生的MediaStore.Files类实现
 
-ios使用 file_picker插件得到返回的\n
+ios使用 file_picker插件得到返回的
 
-支持多选，支持所有文件类型\n
+支持多选，支持所有文件类型
 
 <a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验 , ios暂无打包 自行拉取代码编译</a>
 
@@ -24,7 +24,7 @@ ios使用 file_picker插件得到返回的\n
 |---|---|
 | file_picker  | <a href='https://pub.flutter-io.cn/packages/file_picker'>pub</a>  |
 
-使用：
+<h3>示例：</h3>
 ```java
    # 在pubspec.yaml 中引入依赖 方式1
   flutterfileselector:
@@ -73,7 +73,7 @@ FileModelUtil的参数：
 |  ----  | ----  |
 | 自定义图标  | - |
 
-<h3>注意：</h3>
+<h3>注意：一定要有权限</h3>
 <h5>安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下 file_select_flutter.xml不用创建 已集成：</h5>
 
 ```java
