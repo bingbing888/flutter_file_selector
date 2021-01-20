@@ -279,7 +279,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
               ),
             ),
             /// 列表
-            Expanded(child: list.length==0?Center(child: Text("当前目录为空"),):ListView.builder(
+            Expanded(child: list.length==0?Center(child: Text("无文件~"),):ListView.builder(
               itemCount: list.length,
               padding: EdgeInsets.all(0),
               physics: BouncingScrollPhysics(),

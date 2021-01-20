@@ -3,9 +3,11 @@
 #### 介绍
 flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
-布局使用flutter，安卓使用原生实现，ios使用 file_picker插件得到返回的
+布局使用flutter布局，安卓使用原生的MediaStore.Files类实现，
+ios使用 file_picker插件得到返回的
+支持多选，支持所有文件类型
 
-<a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验,ios暂无</a>
+<a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验 , ios暂无打包 自行拉取代码编译</a>
 
 <img src='/1.png' width='40%'/>
 <img src='/2.png' width='40%'/>
