@@ -74,12 +74,12 @@ class _HomeState extends State<Home> {
               /// 按钮
               btn: Text("选择文档"),
               /// 最大可选
-              maxCount: 1,
+              maxCount: 3,
               /// 开启筛选
               isScreen: true,
               /// 选择器展示的文件格式
               /// 往数组里添加需要展示出来选择的格式
-              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".txt"],
+              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".txt",".pptx",".ppt",".mp4",".mp3"],
               valueChanged: (v){
                 print(v[0].filePath);
                 this.v = v;

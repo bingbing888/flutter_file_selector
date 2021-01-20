@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'comm.dart';
 import 'FileUtilModel.dart';
 
 ///
@@ -212,7 +212,6 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
       body:Builder(builder: (BuildContext context) {
         return Column(
           children: <Widget>[
-            Image.asset("images/word.png"),
             /// appbar
             Container(
                 alignment: Alignment.centerLeft,
@@ -236,7 +235,8 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                         log("返回的类型："+fileSelect.runtimeType.toString());
                         Navigator.pop(context,fileSelect);
                       },
-                      child: Text("选择"),
+                      // child: Text("选择"),
+                      child: Image.asset("images/select.png",width: 25,height: 25,package: Comm.PACKNAME,),
                     ) : Text("选择",style: TextStyle(color: Colors.transparent),),
                   ],
                 ),
@@ -301,13 +301,7 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
                     setState(() { });
                   },
                   secondary: ClipRRect(
-                    child: Container(
-                      color:_type(list[index].filePath)["color"],
-                      width: 55,
-                      height: 55,
-                      alignment: Alignment.center,
-                      child: Text(_type(list[index].filePath)["str"],style: TextStyle(color: Colors.white),),
-                    ),
+                    child: Image.asset(_type(list[index].filePath)["png"], package: Comm.PACKNAME,width: 55,height: 55,),
                     borderRadius: BorderRadius.circular(3),
                   ),
                   title: new Text("${list[index].fileName}",overflow: TextOverflow.ellipsis,),
@@ -334,33 +328,60 @@ class _FlutterFileSelectorState extends State<_FlutterFileSelector> {
   }
 
   _type(String str){
+    str = str.toLowerCase();
+    Map m = Map();
     if(str.endsWith(".pdf")){
-      Map m = Map();
-      m["str"] = "PDF";
-      m["color"] = Colors.red[400];
+      // m["str"] = "PDF";
+      m["color"] = Color(0xffA33639);
+      m["png"] = "images/pdf.png";
+      return m;
+    }
+    if(str.endsWith(".ppt") || str.endsWith(".pptx")){
+      // m["str"] = "PDF";
+      m["color"] = Color(0xffA33639);
+      m["png"] = "images/ppt.png";
       return m;
     }
     if(str.endsWith(".doc") || str.endsWith(".docx")){
-      Map m = Map();
-      m["str"] = "Word";
-      m["color"] = Colors.blue[400];
+      // m["str"] = "Word";
+      m["color"] =  Color(0xff2A5699);
+      m["png"] = "images/word.png";
       return m;
     }
     if(str.endsWith(".xlsx") || str.endsWith(".xls")){
-      Map m = Map();
-      m["str"] = "Excel";
-      m["color"] = Colors.green[400];
+      // m["str"] = "Excel";
+      m["color"] = Color(0xff107B0F);
+      m["png"] = "images/excel.png";
       return m;
     }
     if(str.endsWith(".txt")){
-      Map m = Map();
-      m["str"] = "TxT";
+      // m["str"] = "TxT";
       m["color"] = Colors.grey[400];
+      m["png"] = "images/txt.png";
       return m;
     }
-    Map m = Map();
-    m["str"] = str.substring(str.lastIndexOf(".")+1,str.length);
-    m["color"] = Colors.grey[500];
+    // if(str.endsWith(".txt")){
+    //   // m["str"] = "TxT";
+    //   m["color"] = Colors.grey[400];
+    //   m["png"] = "images/music.png";
+    //   return m;
+    // }
+    // if(str.endsWith(".txt")){
+    //   // m["str"] = "TxT";
+    //   m["color"] = Colors.grey[400];
+    //   m["png"] = "images/music.png";
+    //   return m;
+    // }
+    // AVI、mov、rmvb、rm、FLV、mp4、3GP
+    if(str.endsWith(".mp4") || str.endsWith(".avi") || str.endsWith(".rmvb") || str.endsWith(".mov") || str.endsWith(".rm") || str.endsWith(".flv") || str.endsWith(".3gp")){
+      // m["str"] = "TxT";
+      // m["color"] = Colors.grey[400];
+      m["png"] = "images/video.png";
+      return m;
+    }
+    // m["str"] = str.substring(str.lastIndexOf(".")+1,str.length);
+    // m["color"] = Colors.grey[500];
+    m["png"] = "images/out.png";
     return m;
   }
 }
