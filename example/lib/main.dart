@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:flutterfileselector/FileUtilModel.dart';
+import 'package:flutterfileselector/model/file_util_model.dart';
 import 'package:flutterfileselector/flutterfileselector.dart';
 import 'package:open_file/open_file.dart';
 
@@ -69,17 +69,17 @@ class _HomeState extends State<Home> {
         child: Column(
           children: <Widget>[
             FlutterSelect(
-              /// 标题
+              /// todo:  标题
               title: "选择文档",
-              /// 按钮
+              /// todo:  按钮
               btn: Text("选择文档"),
-              /// 最大可选
+              /// todo:  最大可选
               maxCount: 3,
-              /// 开启筛选
+              /// todo:  开启筛选
               isScreen: true,
-              /// 选择器展示的文件格式
-              /// 往数组里添加需要展示出来选择的格式
-              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".txt",".pptx",".ppt",".mp4",".mp3"],
+              /// todo:  选择器展示的文件格式
+              /// todo:  往数组里添加需要展示出来选择的格式
+              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".txt",".pptx",".ppt",".mp4",".mp3",".flac"],
               valueChanged: (v){
                 print(v[0].filePath);
                 this.v = v;

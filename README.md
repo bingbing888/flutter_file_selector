@@ -37,12 +37,15 @@ ios使用 file_picker插件得到返回的
 ```
 
 ```java
+List fileTypeEnd = [".pdf", ".doc", ".docx",".xls",".xlsx"];
 FlutterSelect(
     btn: Text("这个按钮可以自定义"),
     isScreen: true,
-    fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx"],
+    // 文件类型后缀
+    fileTypeEnd: fileTypeEnd,
+    // 选择文件后的返回
     valueChanged: (v){
-        // v 是 List<FileModelUtil>
+        // v = List<FileModelUtil>
         print(v);
     },
 ),
@@ -67,11 +70,6 @@ FileModelUtil的参数：
 | int fileSize | 文件大小 |
 | String filePath  | 文件路径 |
 | int fileDate  | 文件日期时间 |
-
-未来须实现日志
-|  参数名   | 说名  |
-|  ----  | ----  |
-| 自定义图标  | - |
 
 <h3>注意：一定要有权限</h3>
 <h5>安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下代码</h5>

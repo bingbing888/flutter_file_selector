@@ -53,7 +53,7 @@ public class FlutterfileselectorPlugin implements FlutterPlugin, MethodCallHandl
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("getFile")) {
 
-      Log.d("安卓端接收参数：",call.arguments.toString());
+      Log.d("安卓原生端接收参数：",call.arguments.toString());
 
       // 接收的参数
       List<String> type = call.argument("type");
