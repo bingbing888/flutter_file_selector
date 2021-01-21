@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
               isScreen: true,
               /// todo:  选择器展示的文件格式
               /// todo:  往数组里添加需要展示出来选择的格式
-              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".txt",".pptx",".ppt",".mp4",".mp3",".flac"],
+              fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".pptx",".ppt",".mp4",".mp3",".flac"],
               valueChanged: (v){
                 print(v[0].filePath);
                 this.v = v;

@@ -11,9 +11,9 @@ ios使用 file_picker插件得到返回的
 
 <a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验 , ios暂无打包 自行拉取代码编译</a>
 
-<img src='/1.png' width='40%'/>
-<img src='/2.png' width='40%'/>
-<img src='/3.png' width='40%'/>
+<img src='/001.jpg' width='40%'/>
+<img src='/002.jpg' width='40%'/>
+<img src='/003.jpg' width='40%'/>
 <img src='/images/微信图片_20200610154935.png' width='40%'/>
 
 

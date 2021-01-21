@@ -51,11 +51,14 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
 
   List imgExpanName = [".bmp",".jpg",".png",".gif",".svg",".webp",".jpeg"];
 
+  bool loading = true;
   @override
   void initState() {
     super.initState();
     fileTypeEnd = widget.fileTypeEnd;
-    getFilesAndroid();
+    Future.delayed(Duration(milliseconds:300),(){
+      getFilesAndroid();
+    });
   }
 
   /// todo:  调用原生 得到文件+文件信息
@@ -71,7 +74,7 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
         Map<String, Object> map = {"type": widget.fileTypeEnd ?? [ ".pdf", ".docx", ".doc" ]};
 
         final List<dynamic>  listFileStr = await _channel.invokeMethod('getFile',map);
-
+        loading = false;
         list.clear();
         listFileStr.forEach((f){
           list.add(FileModelUtil(
@@ -101,6 +104,11 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
   Widget build(BuildContext context) {
     return Scaffold(
       body:Builder(builder: (BuildContext context) {
+        /// todo:
+        if (!fileTypeEnd.contains("全部")){
+          fileTypeEnd.insert(0, "全部");
+        }
+
         return Column(
           children: <Widget>[
             /// todo:  appbar
@@ -142,36 +150,41 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(left: 10,right: 10),
               height: 45,
-              child:  Container(
-                width: 80,
-                child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: DropdownButton(
-                      underline: Container(color: Colors.white),
-                      style: Theme.of(context).textTheme.subtitle2,
-                      elevation: 8,
-                      hint: Text('选择类型'),
-                      items: List.generate(fileTypeEnd.length, (index) {
-                        return DropdownMenuItem(child: Text(fileTypeEnd[index]), value: index,);
-                      }),
-                      onChanged: (value) {
-                        // 0是全部
-                        if (value == 0){
-                          widget.fileTypeEnd = fileTypeEnd;
-                          getFilesAndroid();
-                        }else{
-                          widget.fileTypeEnd = [fileTypeEnd[value]];
-                          getFilesAndroid();
-                        }
-                      },
+              child:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton(
+                          underline: Container(color: Colors.white),
+                          style: Theme.of(context).textTheme.subtitle2,
+                          elevation: 8,
+                          hint: Text('选择类型'),
+                          items: List.generate(fileTypeEnd.length, (index) {
+                            return DropdownMenuItem(child: Text(fileTypeEnd[index]), value: index,);
+                          }),
+                          onChanged: (value) {
+                            // 0是全部
+                            if (value == 0){
+                              widget.fileTypeEnd = fileTypeEnd;
+                              getFilesAndroid();
+                            }else{
+                              widget.fileTypeEnd = [fileTypeEnd[value]];
+                              getFilesAndroid();
+                            }
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Text("总文件数 ${list.length}"),
+                ],
               ),
             ),
             /// todo:  列表
-            Expanded(child: list.length==0?Center(child: Text("无文件~"),):ListView.builder(
+            Expanded(child: list.length==0 && loading?Center(child: Text("加载中..."),):ListView.builder(
               itemCount: list.length,
               padding: EdgeInsets.all(0),
               physics: BouncingScrollPhysics(),
@@ -236,6 +249,10 @@ class _FlutterFileSelectorState extends State<FlutterFileSelector> {
     }
     if(str.endsWith(".xlsx") || str.endsWith(".xls")){
       m["png"] = "images/excel.png";
+      return m;
+    }
+    if(str.endsWith(".txt")){
+      m["png"] = "images/txt.png";
       return m;
     }
 
