@@ -9,7 +9,7 @@ ios使用 file_picker插件得到返回的
 
 支持多选，支持所有文件类型
 
-<a href='https://gitee.com/jrnet/flutter_file_selector/releases/1.0.0'>apk下载体验 , ios暂无打包 自行拉取代码编译</a>
+<a href='https://gitee.com/jrnet/flutter_file_selector/releases'>apk下载体验 , ios暂无打包 自行拉取代码编译</a>
 
 <img src='/001.jpg' width='40%'/>
 <img src='/002.jpg' width='40%'/>
