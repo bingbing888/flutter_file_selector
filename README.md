@@ -1,7 +1,7 @@
 # Flutter_file_selector
 
 #### 介绍
- **^__^ 觉得好用的话 劳烦点个Starr 谢谢 ^__^** 
+ ** :heart:  觉得好用的话 劳烦点个Starr 谢谢  :yum: ** 
 
 flutter版本的一个文件选择器 ，顺序按最近访问的时间排序
 
