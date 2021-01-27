@@ -107,21 +107,23 @@ FlutterSelect(
 ### 注意：一定要有权限、必需配置
 
 <h5>安卓需配置目录访问权限 配置AndroidManifest.xml 文件，application里加入如下代码</h5>
-```java
-    // tools:replace="android:resource"  需要导入tools 才能使用
-    // AndroidManifest.xml 的 manifest 中 引入 xmlns:tools="http://schemas.android.com/tools"
-    <provider
-       android:name="androidx.core.content.FileProvider"
-       android:authorities="${applicationId}.fileProvider"
-       android:exported="false"
-       android:grantUriPermissions="true"
-       tools:replace="android:authorities">
-       <meta-data
-           android:name="android.support.FILE_PROVIDER_PATHS"
-           android:resource="@xml/file_select_flutter"
-           tools:replace="android:resource" />
-    </provider>
+
 ```
+// tools:replace="android:resource"  需要导入tools 才能使用
+// AndroidManifest.xml 的 manifest 中 引入 xmlns:tools="http://schemas.android.com/tools"
+<provider
+   android:name="androidx.core.content.FileProvider"
+   android:authorities="${applicationId}.fileProvider"
+   android:exported="false"
+   android:grantUriPermissions="true"
+   tools:replace="android:authorities">
+   <meta-data
+       android:name="android.support.FILE_PROVIDER_PATHS"
+       android:resource="@xml/file_select_flutter"
+       tools:replace="android:resource" />
+</provider>
+```
+ 
 
 IOS 的配置 [点此查看]( https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup#--ios)
 
