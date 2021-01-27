@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutterfileselector/model/drop_down_model.dart';
 import 'package:flutterfileselector/model/file_util_model.dart';
 import 'package:flutterfileselector/flutterfileselector.dart';
 import 'package:open_file/open_file.dart';
@@ -64,22 +65,22 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("演示"),actions: [],),
       body: Center(
         child: Column(
           children: <Widget>[
             FlutterSelect(
               /// todo:  标题
-              title: "选择文档",
               /// todo:  按钮
               btn: Text("选择文档"),
               /// todo:  最大可选
               maxCount: 3,
               /// todo:  开启筛选
               isScreen: true,
-              /// todo:  选择器展示的文件格式
-              /// todo:  往数组里添加需要展示出来选择的格式
+              /// todo:  往数组里添加需要的格式
               fileTypeEnd: [".pdf", ".doc", ".docx",".xls",".xlsx",".pptx",".ppt",".mp4",".mp3",".flac"],
+              /// todo:  自定义下拉选项，不传默认
+
               valueChanged: (v){
                 print(v[0].filePath);
                 this.v = v;
@@ -88,7 +89,8 @@ class _HomeState extends State<Home> {
                 });
               },
             ),
-            FlatButton(
+            MaterialButton(
+              color: Colors.blue,
               onPressed: () {
                 OpenFile.open(v[0].filePath);
               },

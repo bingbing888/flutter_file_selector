@@ -11,15 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtilFlutter {
-    public static List<String> getTypeOfFile(Context context, String[] extension)
+    private static ContentResolver mContentResolver;
+    public static List<String> getTypeOfFile(Context context, List<String> extension)
     {
+        mContentResolver = context.getContentResolver();
         List<String> list = new ArrayList<>();
 
         //从外存中获取
         Uri fileUri=Files.getContentUri("external");
 
         //筛选列，筛选 文件路径、不含后缀的文件名
-        String[] projection=new String[]{
+        String[] projection = new String[]{
                 FileColumns.DATA,
                 FileColumns.TITLE ,
         };
@@ -27,13 +29,13 @@ public class FileUtilFlutter {
         //筛选语句
         String selection="";
 
-        for(int i=0;i<extension.length;i++)
+        for(int i=0;i<extension.size();i++)
         {
             if(i!=0)
             {
                 selection=selection+" OR ";
             }
-            selection=selection+FileColumns.DATA+" LIKE '%"+extension[i]+"'";
+            selection=selection+FileColumns.DATA+" LIKE '%"+extension.get(i)+"'";
         }
 
         //按时间递增顺序进行排序，从后往前移动游标就可实现时间递减
@@ -58,7 +60,7 @@ public class FileUtilFlutter {
 
                 list.add(data);
 
-                Log.d("tag", data);
+                Log.d("路径", data);
 
             }while(cursor.moveToPrevious());
         }
